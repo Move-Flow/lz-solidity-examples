@@ -134,6 +134,10 @@ npx hardhat --network fuji ownerOf --token-id 1 --contract ONFT721Mock
 
 OmniCounter is a simple contract with a counter. You can only *remotely* increment the counter!
 
+* Deployment uses package `hardhat-deploy`
+* `deploy` is a task created in `deploy/OmniCounter.js`. Other tasks are in `tasks/index.js`
+* Endpoint contract addresses are defined in `constants/layerzeroEndpoints.json`.
+
 1. Deploy both OmniCounters:
 
 ```shell
