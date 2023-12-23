@@ -3,8 +3,9 @@ const { getDeploymentAddresses } = require("../utils/readStatic")
 const dotenv = require("dotenv");
 dotenv.config();
 
-const localContractAdd = "0x7F384B4a58df3e38CDF74727Cfbf9D22a65aCE1f";
+const MV_JSON = require("../abi/testnet01/MoveflowCrosschain");
 
+const localContractAdd = "0x7F384B4a58df3e38CDF74727Cfbf9D22a65aCE1f";
 // remote aptos contract address
 const remoteAddress = "0xdbf4ebd276c84e88f0a04a4b0d26241f654ad411c250afa3a888eb3f0011486a";
 
@@ -12,7 +13,7 @@ const remoteAddress = "0xdbf4ebd276c84e88f0a04a4b0d26241f654ad411c250afa3a888eb3
 const remoteChainId = 10108
 
 module.exports = async function (taskArgs, hre) {
-    const MV_JSON = require("../deployments/bsc-testnet/MoveflowCrosschain");
+    // const MV_JSON = require("../deployments/bsc-testnet/MoveflowCrosschain");
     // const ENDPOINT_HTTP_ACHM = 'https://rpc.ankr.com/bsc_testnet_chapel';
     // const ENDPOINT_HTTP_ACHM = "https://go.getblock.io/7b3534a27b7947dda6070eb44789e4be";
     const ENDPOINT_HTTP_ACHM = "https://bsc-testnet.blastapi.io/c5accb66-4edf-43b4-9e71-698b48a64ba4";
