@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract MoveflowCrosschain is NonblockingLzApp {
     mapping(bytes => address) public r2lCoinMap; // remote to local coin map
     mapping(address => bytes) public l2rCoinMap; // local to remote coin map
-    mapping(address => CrossChainPool) public coinPoolMap; // local coin to pool
+    mapping(address => address) public coinPoolMap; // local coin to pool
     address public deployer;
     enum PacketType {
         SEND_TO_APTOS,
@@ -53,10 +53,10 @@ contract MoveflowCrosschain is NonblockingLzApp {
         require(l2rCoinMap[token].length != 0, "Coin not registered!");
 
         // the pool must have been registgered
-        CrossChainPool notSet = CrossChainPool(address(0));
-        require(coinPoolMap[token] != notSet, "Crosschain coin pool not registered!");
+        // CrossChainPool notSet = CrossChainPool(address(0));
+        require(coinPoolMap[token] != address(0x0), "Crosschain coin pool not registered!");
 
-        CrossChainPool ccPool = coinPoolMap[token];
+        CrossChainPool ccPool = CrossChainPool(coinPoolMap[token]);
         // balance in pool must >= amount
         require(IERC20(token).balanceOf(address(ccPool)) >= amount, "Insurfficient cx coin pool balance!");
 
@@ -72,7 +72,7 @@ contract MoveflowCrosschain is NonblockingLzApp {
 
         // create cross chain pool for localCoin
         CrossChainPool pool = new CrossChainPool(localCoin);
-        coinPoolMap[localCoin] = pool;
+        coinPoolMap[localCoin] = address(pool);
         emit CoinRegister(localCoin);
     }
 
@@ -81,14 +81,13 @@ contract MoveflowCrosschain is NonblockingLzApp {
         require(l2rCoinMap[coin].length != 0, "Coin not registered!");
 
         // the pool must have been registgered
-        CrossChainPool notSet = CrossChainPool(address(0));
-        require(coinPoolMap[coin] != notSet, "Crosschain coin pool not registered!");
+        require(coinPoolMap[coin] != address(0x0), "Crosschain coin pool not registered!");
 
-        CrossChainPool ccPool = coinPoolMap[coin];
+        CrossChainPool ccPool = CrossChainPool(coinPoolMap[coin]);
 
         // sender balance must >= the amount
         require(IERC20(coin).balanceOf(address(msg.sender)) >= amount, "Insurfficient sender balance!");
-        ccPool.depositTokens(amount);
+        ccPool.depositTokens(msg.sender, amount);
     }
 
     function estimateFee(
@@ -157,10 +156,10 @@ contract CrossChainPool {
         token = IERC20(_tokenAddress);
     }
 
-    function depositTokens(uint256 amount) public {
+    function depositTokens(address sender, uint256 amount) public {
         // Transfer the tokens from the sender to this contract
-        require(token.transferFrom(msg.sender, address(this), amount), "Deposit failed");
-        emit DepositCx(msg.sender, amount);
+        require(token.transferFrom(sender, address(this), amount), "Deposit failed");
+        emit DepositCx(sender, amount);
     }
 
     function transferTokens(address to, uint256 amount) onlyDeployer external {

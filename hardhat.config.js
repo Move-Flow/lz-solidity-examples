@@ -12,6 +12,8 @@ require("hardhat-deploy-ethers")
 require("@openzeppelin/hardhat-upgrades")
 require("./tasks")
 
+const { BSCSCAN_API_KEY } = process.env;
+
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
@@ -149,7 +151,7 @@ module.exports = {
             accounts: accounts(),
         },
         "bsc-testnet": {
-            url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+            url: "https://go.getblock.io/7b3534a27b7947dda6070eb44789e4be/",
             chainId: 97,
             accounts: accounts(),
         },
@@ -179,4 +181,8 @@ module.exports = {
             accounts: accounts(),
         },
     },
+    etherscan: {
+        // Your API key for Etherscan
+        apiKey: BSCSCAN_API_KEY,
+    }
 }
