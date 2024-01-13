@@ -155,6 +155,7 @@ task("moveflowCrosschain", "get oracle", require("./moveflowCrosschain")).addPar
 //
 task("setTrustedRemote.Aptos", "setTrustedRemote Aptos", require("./setTrustedRemote.Aptos"))
 task("withdrawFrom.Aptos", "withdraw from Aptos", require("./withdrawFrom.Aptos"))
+task("fundRecipient", "fundRecipient on EVM", require("./fundRecipient"))
 
 // npx hardhat deployWireCheck --e testnet --contract ExampleOFT --proxy-contract ExampleBasedOFT --proxy-chain optimism-kovan
 // npx hardhat deployWireCheck --e testnet --contract ExampleUniversalONFT721

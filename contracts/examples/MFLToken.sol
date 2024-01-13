@@ -8,6 +8,10 @@ contract MFLToken is ERC20 {
         _mint(msg.sender, 100 * 10**uint(decimals()));
     }
 
+    function decimals() public pure override returns (uint8) {
+        return 8;
+    }
+
     function mint() public {
         require(totalSupply() + 100 * 10**uint(decimals()) <= 999999999 * 10**uint(decimals()), "Token cap reached");
         _mint(msg.sender, 100 * 10**uint(decimals()));

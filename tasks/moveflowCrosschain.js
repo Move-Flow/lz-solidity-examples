@@ -1,6 +1,5 @@
 const CHAIN_ID = require("../constants/chainIds.json")
 const ENDPOINTS = require("../constants/layerzeroEndpoints.json")
-const MV_JSON = require("../deployments/bsc-testnet/MoveflowCrosschain");
 
 // read status of moveflow evm contract on testnet
 module.exports = async function (taskArgs, hre) {
@@ -9,7 +8,7 @@ module.exports = async function (taskArgs, hre) {
 
     const ENDPOINT_HTTP_ACHM = 'https://rpc.ankr.com/bsc_testnet_chapel';
     const providerHttpAch = new ethers.providers.JsonRpcProvider(ENDPOINT_HTTP_ACHM, 97);
-    const moveflowCrosschain = new ethers.Contract("0x7F384B4a58df3e38CDF74727Cfbf9D22a65aCE1f", MV_JSON.abi, providerHttpAch);
+    const moveflowCrosschain = await ethers.getContract("MoveflowCrossschain");
     // const moveflowCrosschain = await ethers.getContract("MoveflowCrosschain", providerHttpAch.getSigner());
 
     /*

@@ -36,10 +36,6 @@ contract MoveflowCrosschain is NonblockingLzApp {
         uint64, /*_nonce*/
         bytes memory _payload
     ) internal override {
-        // source chain ID / address must have been set in remote trusted
-        bytes memory remoteAddress = this.getTrustedRemoteAddress(_srcChainId);
-        require(keccak256(_srcAddress) == keccak256(remoteAddress));  // Todo: remove the verification, it's already verified by LZ
-
         fundRecipient(_payload);
     }
 
@@ -119,7 +115,7 @@ contract MoveflowCrosschain is NonblockingLzApp {
     }
 
         // receive payload: packet type(1) + receiver(32) + remote token(32) + amount(8)
-    function _decodeReceivePayload(bytes memory _payload) internal pure
+    function _decodeReceivePayload(bytes memory _payload) public pure
         returns (
             address to,
             address token,
@@ -127,15 +123,10 @@ contract MoveflowCrosschain is NonblockingLzApp {
             // bool unwrap  // Todo: what's unwrap
         )
     {
-        require(_payload.length == 73, "Moveflow crosschain: invalid payload length");
-        PacketType packetType = PacketType(uint8(_payload[0]));
-        require(packetType == PacketType.RECEIVE_FROM_APTOS, "Moveflow crosschain packet type");
-        assembly {
-            to := mload(add(_payload, 33))
-            token := mload(add(_payload, 65))
-            amountSD := mload(add(_payload, 73))
-        }
-        // unwrap = uint8(_payload[73]) == 1;
+        require(_payload.length == 128, "Moveflow crosschain: invalid payload length");
+        (uint8 packetType, address decodedTo, address decodedToken, uint64 decodedAmountSD) = abi.decode(_payload, (uint8, address, address, uint64));
+        require(PacketType(packetType) == PacketType.RECEIVE_FROM_APTOS, "Moveflow crosschain: invalid packet type");
+        return (decodedTo, decodedToken, decodedAmountSD);
     }
 }
 
